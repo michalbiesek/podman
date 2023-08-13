@@ -255,6 +255,7 @@ spelled with complete minutiae.
       * podman-vX.Y.Z.msi
       * podman-remote-static-linux_amd64.tar.gz
       * podman-remote-static-linux_arm64.tar.gz
+      * podman-remote-static-linux_riscv64.tar.gz
       * podman-installer-macos-amd64.pkg
       * podman-installer-macos-arm64.pkg
       * shasums

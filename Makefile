@@ -160,6 +160,7 @@ CROSS_BUILD_TARGETS := \
 	bin/podman.cross.linux.mipsle \
 	bin/podman.cross.linux.mips64 \
 	bin/podman.cross.linux.mips64le \
+	bin/podman.cross.linux.riscv64 \
 	bin/podman.cross.freebsd.amd64 \
 	bin/podman.cross.freebsd.arm64
 
@@ -359,7 +360,7 @@ $(SRCBINDIR)/podman$(BINSFX): $(SOURCES) go.mod go.sum | $(SRCBINDIR)
 		-tags "${REMOTETAGS}" \
 		-o $@ ./cmd/podman
 
-$(SRCBINDIR)/podman-remote-static-linux_amd64 $(SRCBINDIR)/podman-remote-static-linux_arm64: $(SRCBINDIR)/podman-remote-static-linux_%: $(SRCBINDIR) $(SOURCES) go.mod go.sum
+$(SRCBINDIR)/podman-remote-static-linux_amd64 $(SRCBINDIR)/podman-remote-static-linux_arm64 $(SRCBINDIR)/podman-remote-static-linux_riscv64: $(SRCBINDIR)/podman-remote-static-linux_%: $(SRCBINDIR) $(SOURCES) go.mod go.sum
 	CGO_ENABLED=0 \
 	GOOS=linux \
 	GOARCH=$* \
@@ -386,9 +387,10 @@ $(SRCBINDIR)/quadlet: $(SOURCES) go.mod go.sum
 .PHONY: quadlet
 quadlet: bin/quadlet
 
-PHONY: podman-remote-static-linux_amd64 podman-remote-static-linux_arm64
+PHONY: podman-remote-static-linux_amd64 podman-remote-static-linux_arm64 podman-remote-static-linux_riscv64
 podman-remote-static-linux_amd64: $(SRCBINDIR)/podman-remote-static-linux_amd64
 podman-remote-static-linux_arm64: $(SRCBINDIR)/podman-remote-static-linux_arm64
+podman-remote-static-linux_riscv64: $(SRCBINDIR)/podman-remote-static-linux_riscv64
 
 .PHONY: podman-winpath
 podman-winpath: $(SOURCES) go.mod go.sum
@@ -978,6 +980,8 @@ release-artifacts: clean-binaries
 	tar -cvzf podman-remote-static-linux_amd64.tar.gz bin/podman-remote-static-linux_amd64
 	$(MAKE) podman-remote-static-linux_arm64
 	tar -cvzf podman-remote-static-linux_arm64.tar.gz bin/podman-remote-static-linux_arm64
+	$(MAKE) podman-remote-static-linux_riscv64
+	tar -cvzf podman-remote-static-linux_riscv64.tar.gz bin/podman-remote-static-linux_riscv64
 	mv podman-remote-static-linux*.tar.gz release/
 	cd release/; sha256sum *.zip *.tar.gz > shasums
 
